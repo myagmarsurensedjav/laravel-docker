@@ -2,8 +2,8 @@
 
 Laravel болон PHP application ажиллуулах суурь docker image. nginx-fpm болон octane гэсэн 2 төрлийн image байгаа.
 
-- `myagmarsurensejdav/nginx-fpm` ээр Laravel болон бүх төрлийн PHP application ажлуулах боломжтой.
-- `myagmarsurensejdav/octane` ээр Laravel octane аргачлалаар ажиллах application ажлуулах боломжтой.
+- `myagmarsurensejdav/laravel-docker:nginx-fpm` ээр Laravel болон бүх төрлийн PHP application ажлуулах боломжтой.
+- `myagmarsurensejdav/laravel-docker:octane- ээр Laravel octane аргачлалаар ажиллах application ажлуулах боломжтой.
 
 ## Preinstalled packages
 
@@ -21,13 +21,13 @@ Laravel болон PHP application ажиллуулах суурь docker image.
 
 Laravel-с гаргасан албан ёсны сан бөгөөд php-swoole ийн тусламжтай http request ийг маш хурдтай боловсруулах боломжтой болгож байгаа юм. Илүү дэлгэрэнгүй бэлэн хэрхэн суулгах зааврыг [сайтаас](https://laravel.com/docs/8.x/octane) нь үзнэ үү.
 
-`myagmarsurensejdav/octane` image ийг ашиглана. APP_ENV=local байгаа тохиолдолд нэмэлтээд `--watch` argument нэмж ачааллах тул source code-д өөрчлөлт орсон бол process автоматаар restart хийгдээд явах болно.
+`myagmarsurensejdav/laravel-docker:octane- image ийг ашиглана. APP_ENV=local байгаа тохиолдолд нэмэлтээд `--watch` argument нэмж ачааллах тул source code-д өөрчлөлт орсон бол process автоматаар restart хийгдээд явах болно.
 
 `OCTANE_WORKERS=3`, `OCTANE_TASK_WORKERS=3` гэсэн env тохиргоог тохируулах боломжтой юм. Анхны утгаараа auto, auto ээр тохирсон байгаа тул production build тохиолдолд эдгээр утгыг тухайн серверт тааруулан тохируулах боломжтой юм.
 
 ## nginx-fpm
 
-Бүх төрлийн веб аппликэйшн асаах боломжтой юм. `myagmarsurensejdav/nginx-fpm` image ийг ашиглана. Laravel ээс өөр төрлийн PHP application асааж байгаа тохиолдолд `LARAVEL_TYPE=other` гэсэн тохиргоо хийж өгөх шаардлагатай юм.
+Бүх төрлийн веб аппликэйшн асаах боломжтой юм. `myagmarsurensejdav/laravel-docker:nginx-fpm` image ийг ашиглана. Laravel ээс өөр төрлийн PHP application асааж байгаа тохиолдолд `LARAVEL_TYPE=other` гэсэн тохиргоо хийж өгөх шаардлагатай юм.
 
 # Container Roles
 
@@ -48,13 +48,13 @@ nginx-fpm болон octane төрлийн бүх image энэ горимоор 
 
 ## Composer
 
-Build хийгдсэн `myagmarsurensejdav/octane/composer` docker image ийн тусламжтай composer package уудыг суулгах боломжтой бөгөөд энэ image нь mplus ийн private gitlab repo руу хандах эрхтэйгээрээ давуу талтай юм.
+Build хийгдсэн `myagmarsurensejdav/laravel-docker:octane-composer` docker image ийн тусламжтай composer package уудыг суулгах боломжтой бөгөөд энэ image нь mplus ийн private gitlab repo руу хандах эрхтэйгээрээ давуу талтай юм.
 
 Жишээ нь дараах байдлаар composer install хийж болох юм.
 
 ```
 docker run --rm -it -v $(pwd):/app \
-    myagmarsurensejdav/octane/composer \
+    myagmarsurensejdav/laravel-docker:octane-composer \
     composer install
 ```
 
@@ -63,9 +63,9 @@ docker run --rm -it -v $(pwd):/app \
 Дараахь жишээ docker image-д octane, rabbitmq_consumer, scheduler ийг асааж өгсөн байгаа.
 
 ```
-FROM registry.gitlab.com/wpsos/containers/laravel/octane/dev AS dev
+FROM myagmarsurensedjav/laravel-docker:octane-dev AS dev
 
-FROM myagmarsurensejdav/octane/composer AS vendor
+FROM myagmarsurensejdav/laravel-docker:octane-composer AS vendor
 
 COPY composer.json composer.json
 COPY composer.lock composer.lock
@@ -78,7 +78,7 @@ RUN composer install \
     --no-scripts \
     --no-dev
 
-FROM registry.gitlab.com/wpsos/containers/laravel/octane AS app
+FROM myagmarsurensedjav/laravel-docker:octane AS app
 
 PHP_MEMORY_LIMIT=256M
 
@@ -149,7 +149,7 @@ composer requrie predis/predis
 php-gd санг нэмэлтээр суулгах шаардлагатай үед. Image-д суулгах script нь хавсаргагдсан байгаа бөгөөд дараахь байдлаар өөрийн Dockerfile аа бэлдэж болох юм.
 
 ```
-FROM myagmarsurensejdav/nginx-fpm
+FROM myagmarsurensejdav/laravel-docker:nginx-fpm
 RUN /scripts/install-php-gd.sh
 ```
 
@@ -158,7 +158,7 @@ RUN /scripts/install-php-gd.sh
 php-bcmath санг нэмэлтээр суулгах шаардлагатай үед. Image-д суулгах script нь хавсаргагдсан байгаа бөгөөд дараахь байдлаар өөрийн Dockerfile аа бэлдэж болох юм.
 
 ```
-FROM myagmarsurensejdav/nginx-fpm
+FROM myagmarsurensejdav/laravel-docker:nginx-fpm
 RUN /scripts/install-php-bcmath.sh
 ```
 
@@ -167,7 +167,7 @@ RUN /scripts/install-php-bcmath.sh
 php-zip санг нэмэлтээр суулгах шаардлагатай үед. Image-д суулгах script нь хавсаргагдсан байгаа бөгөөд дараахь байдлаар өөрийн Dockerfile аа бэлдэж болох юм.
 
 ```
-FROM myagmarsurensejdav/nginx-fpm
+FROM myagmarsurensejdav/laravel-docker:nginx-fpm
 RUN /scripts/install-php-zip.sh
 ```
 
