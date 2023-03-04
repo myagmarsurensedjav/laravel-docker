@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+set -e
+
+APP_ENV=${APP_ENV:-production}
+CONTAINER_ROLE=${CONTAINER_ROLE:-http}
+
+echo "The app env is ${APP_ENV}, ${CONTAINER_ROLE}"
+
+# Setup ...
+/scripts/setup-user.sh
+/scripts/setup-php.sh
+/scripts/setup-laravel.sh
+
+# Start service ...
+if [ "$CONTAINER_ROLE" = "http" ]; then
+    /scripts/start-http.sh
+elif [ "$CONTAINER_ROLE" = "horizon" ]; then
+    /scripts/start-horizon.sh
+elif [ "$CONTAINER_ROLE" = "rabbitmq" ]; then
+    /scripts/start-rabbitmq.sh
+elif [ "$CONTAINER_ROLE" = "scheduler" ]; then
+    /scripts/start-scheduler.sh
+else
+    echo "Could not match the container role \"$CONTAINER_ROLE\""
+    exit 1
+fi
