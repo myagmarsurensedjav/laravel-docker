@@ -1,4 +1,4 @@
-FROM phpswoole/swoole:4.8.8-php8.1-alpine AS base
+FROM phpswoole/swoole:4.8.12-php8.2-alpine AS base
 WORKDIR /app
 
 COPY config/start-container /usr/local/bin/start-container
