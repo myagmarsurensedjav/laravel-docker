@@ -2,9 +2,6 @@ version: 2.1
 
 jobs:
   build:
-    filters:
-      tags:
-        only: /.*/
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -20,3 +17,12 @@ jobs:
             export IMAGE_TAG=${CIRCLE_TAG}
             make build
             make push
+
+workflows:
+  build-and-push:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only:
+                - /.*/
