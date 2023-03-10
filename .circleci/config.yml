@@ -1,28 +1,29 @@
 version: 2.1
 
 jobs:
-  build:
-    docker:
-      - image: circleci/buildpack-deps:stretch
+  publish-docker:
+    machine:
+      image: ubuntu-2004:202201-02
     steps:
       - checkout
       - run:
           name: Docker Login
-          command: |
-            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          command: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - run:
-          name: Build and Push Images
+          name: Docker Build
           command: |
-            export REGISTRY=myagmarsurensedjav/laravel-docker
-            export IMAGE_TAG=${CIRCLE_TAG}
-            make build
-            make push
+            IMAGE_TAG=$CIRCLE_TAG make build
+      - run:
+          name: Docker Push
+          command: |
+            IMAGE_TAG=$CIRCLE_TAG make push
 
 workflows:
-  build-and-push:
+  publish:
     jobs:
-      - build:
+      - publish-docker:
           filters:
             tags:
-              only:
-                - /.*/
+              only: /^v.*/
+            branches:
+              ignore: /.*/
