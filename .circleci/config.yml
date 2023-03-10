@@ -24,6 +24,6 @@ workflows:
       - publish-docker:
           filters:
             tags:
-              only: /^v.*/
+              only: /.*/
             branches:
               ignore: /.*/
