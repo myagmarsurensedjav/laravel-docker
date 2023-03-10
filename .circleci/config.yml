@@ -1,0 +1,21 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - run:
+          name: Docker Login
+          command: |
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - run:
+          name: Build and Push Images
+          command: |
+            if [ "${CIRCLE_TAG}" != "" ]; then
+              export REGISTRY=myagmarsurensedjav/laravel-docker
+              export IMAGE_TAG=${CIRCLE_TAG}
+              make build
+              make push
+            fi
