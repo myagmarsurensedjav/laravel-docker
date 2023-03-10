@@ -2,6 +2,9 @@ version: 2.1
 
 jobs:
   build:
+    filters:
+      tags:
+        only: /.*/
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -13,9 +16,7 @@ jobs:
       - run:
           name: Build and Push Images
           command: |
-            if [ "${CIRCLE_TAG}" != "" ]; then
-              export REGISTRY=myagmarsurensedjav/laravel-docker
-              export IMAGE_TAG=${CIRCLE_TAG}
-              make build
-              make push
-            fi
+            export REGISTRY=myagmarsurensedjav/laravel-docker
+            export IMAGE_TAG=${CIRCLE_TAG}
+            make build
+            make push
