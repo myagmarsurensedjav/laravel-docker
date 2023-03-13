@@ -9,11 +9,11 @@ Laravel болон PHP application ажиллуулах суурь docker image.
 
 Дараах нэмэлт сангууд суурльлуулгадсан байгаа.
 
-- php8.1
-- php8.1-swoole
-- php8.1-mysql
-- php8.1-sqlite
-- php8.1-pcntl
+- php8.2
+- php8.2-swoole
+- php8.2-mysql
+- php8.2-sqlite
+- php8.2-pcntl
 
 # Image Types
 
@@ -173,29 +173,4 @@ RUN /scripts/install-php-zip.sh
 
 # Known issues
 
-## phpredis Extension
-
-`phpredis` ийг pecl ээр суулгах явцад дараахь алдаа гарч байгаа тул дээрх `predis/predis` composer санг ашиглах аргачлалыг ашиглана. 
-
-Дараахь командыг ажиллуулаад суулгах гэсэн боловч:
-```
-RUN pecl install -o -f redis \
-&&  rm -rf /tmp/pear \
-&&  docker-php-ext-enable redis
-```
-
-Гарч байгаа алдаа нь:
-
-```
-........................................................done: 268,154 bytes
-29 source files, building
-running: phpize
-Configuring for:
-PHP Api Version:         20200930
-Zend Module Api No:      20200930
-Zend Extension Api No:   420200930
-Cannot find autoconf. Please check your autoconf installation and the
-$PHP_AUTOCONF environment variable. Then, rerun this script.
-
-ERROR: `phpize' failed
-```
+....
