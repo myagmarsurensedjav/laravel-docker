@@ -118,9 +118,6 @@ docker-compose exec <service> zsh
 # Тест ажлуулах
 t
 
-# php-cs-fixer код форматар ажлуулах
-fix-cs
-
 # Artisan команд ажлуулах
 pa migrate
 

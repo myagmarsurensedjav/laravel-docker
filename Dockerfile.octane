@@ -15,11 +15,6 @@ RUN chmod +x /usr/local/bin/start-container \
     pcntl \
     pdo_mysql \
     opcache \
-    && apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && apk del pcre-dev ${PHPIZE_DEPS} \
-    && rm -rf /tmp/pear \
     && rm -rf /var/cache/apk/*
 
 COPY config/php/php.ini /usr/local/etc/php/conf.d/z-php.ini
@@ -42,7 +37,6 @@ COPY config/chokidar/yarn.lock /yarn.lock
 RUN apk add --no-cache yarn git zsh vim \
     && cd / \
     && yarn \
-    && composer global require friendsofphp/php-cs-fixer \
     && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 COPY config/zsh/zshrc /root/.zshrc

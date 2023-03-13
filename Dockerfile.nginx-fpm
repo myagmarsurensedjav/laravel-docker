@@ -55,7 +55,6 @@ FROM composer AS dev
 
 RUN apk add --no-cache git zsh vim \
     && cd / \
-    && composer global require friendsofphp/php-cs-fixer \
     && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 COPY config/zsh/zshrc /root/.zshrc
